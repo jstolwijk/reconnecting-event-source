@@ -1,4 +1,4 @@
-import { ReconnectingEventSource } from ".";
+import { ReconnectingEventSource } from "./index";
 
 import express, { Express } from "express";
 import bodyParser from "body-parser";
@@ -43,4 +43,4 @@ const aTestServer = (): Express => {
 
 const testServer = aTestServer();
 
-const eventSource = new ReconnectingEventSource(`http://localhost:${testServer.settings.port}`);
+const eventSource = new ReconnectingEventSource(`http://localhost:${testServer.settings.port}/events`);
