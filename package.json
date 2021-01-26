@@ -1,5 +1,5 @@
 {
-  "name": "@jessestolwijk/reconnecting-event-source",
+  "name": "@event-source/reconnecting",
   "version": "0.0.1",
   "description": "EventSource with auto-reconnect functionality",
   "main": "dist/index.js",
