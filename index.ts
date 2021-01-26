@@ -1,13 +1,14 @@
 import EventSource from "eventsource";
-
 export class ReconnectingEventSource {
   private eventSource?: EventSource;
   private url: string;
   private eventSourceInitDict?: EventSourceInit;
+  private reconnecting: boolean = false;
 
-  onError: ((eventSource: EventSource, ev: Event) => any) | null = null;
-  onMessage: ((eventSource: EventSource, ev: MessageEvent) => any) | null = null;
-  onOpen: ((eventSource: EventSource, ev: Event) => any) | null = null;
+  onError: ((event: Event) => any) | null = null;
+  onMessage: ((event: MessageEvent) => any) | null = null;
+  onOpen: ((event: Event) => any) | null = null;
+  onReconnected: ((event: Event) => any) | null = null;
 
   constructor(url: string, eventSourceInitDict?: EventSourceInit) {
     this.url = url;
@@ -19,15 +20,24 @@ export class ReconnectingEventSource {
     const reconnectingEventSource = this;
 
     this.getEventSource().onerror = function (this: EventSource, ev: Event): any {
-      const res = reconnectingEventSource.onError !== null ? reconnectingEventSource.onError(this, ev) : null;
-      reconnectingEventSource.handleError();
+      const res = reconnectingEventSource.onError !== null ? reconnectingEventSource.onError(ev) : null;
+      reconnectingEventSource.handleError(ev);
       return res;
     };
     this.getEventSource().onmessage = function (this: EventSource, ev: MessageEvent) {
-      return reconnectingEventSource.onMessage !== null ? reconnectingEventSource.onMessage(this, ev) : null;
+      return reconnectingEventSource.onMessage !== null ? reconnectingEventSource.onMessage(ev) : null;
     };
     this.getEventSource().onopen = function (this: EventSource, ev: Event): any {
-      return reconnectingEventSource.onOpen !== null ? reconnectingEventSource.onOpen(this, ev) : null;
+      const res = reconnectingEventSource.onOpen !== null ? reconnectingEventSource.onOpen(ev) : null;
+
+      if (reconnectingEventSource.reconnecting) {
+        if (reconnectingEventSource.onReconnected !== null) {
+          reconnectingEventSource.onReconnected(new Event("reconnected"));
+        }
+
+        reconnectingEventSource.reconnecting = false;
+      }
+      return res;
     };
   };
 
@@ -40,10 +50,11 @@ export class ReconnectingEventSource {
     return this.eventSource;
   };
 
-  private handleError = () => {
+  private handleError = (event: Event) => {
     this.getEventSource().close();
 
     setTimeout(() => {
+      this.reconnecting = true;
       this.createEventSource();
     }, 1000);
   };
