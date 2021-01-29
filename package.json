@@ -1,8 +1,16 @@
 {
-  "name": "@event-source/reconnecting",
-  "version": "0.0.1",
+  "name": "@jessestolwijk/reconnecting-event-source",
+  "version": "0.0.3",
   "description": "EventSource with auto-reconnect functionality",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JesseStolwijk/reconnecting-event-source.git"
+  },
   "scripts": {
     "build": "tsc",
     "test": "node dist/test.js"

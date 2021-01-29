@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "target": "ES2015",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
     "outDir": "dist/"
   },
   "include": ["**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "$schema": "https://json.schemastore.org/tsconfig"
 }
