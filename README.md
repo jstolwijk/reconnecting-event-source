@@ -11,21 +11,21 @@ import { ReconnectingEventSource } from "@jessestolwijk/reconnecting-event-sourc
 
 const eventSource = new ReconnectingEventSource("https://localhost:8080/events");
 
-eventSource.onOpen((event) => {
+eventSource.onOpen = (event) => {
   console.log("Connection opened");
-});
+};
 
-eventSource.onMessage((event) => {
+eventSource.onMessage = (event) => {
   console.log(`Received message ${event.body}`);
-});
+};
 
-eventSource.onError((event) => {
+eventSource.onError = (event) => {
   console.log(`Error ${event}`);
-});
+};
 
-eventSource.onReconnected((event) => {
+eventSource.onReconnected = (event) => {
   console.log("Connection with the server restored");
-});
+};
 
 // Close the event source after 1 minute
 setTimeout(() => {
